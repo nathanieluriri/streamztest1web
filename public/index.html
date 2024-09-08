@@ -79,6 +79,26 @@
             'performance',
           ].filter(feature => typeof app[feature] === 'function');
           loadEl.textContent = `Firebase SDK loaded with ${features.join(', ')}`;
+    document.addEventListener('DOMContentLoaded', function() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const email = urlParams.get('email');
+
+      // Initialize Firebase
+      firebase.initializeApp(/* ... your Firebase config */);
+
+      // Verify the email link
+      firebase.auth().signInWithEmailLink(email, window.location.href)
+        .then((userCredential) => {
+          // User is signed in
+          console.log('User signed in with email link:', userCredential.user);
+          // Redirect to your Flutter app (optional)
+          window.location.href = 'your-flutter-app-scheme://'; // Replace with your app's scheme
+        })
+        .catch((error) => {
+          // Handle errors
+          console.error('Error verifying email link:', error);
+        });
+    });
         } catch (e) {
           console.error(e);
           loadEl.textContent = 'Error loading the Firebase SDK, check the console.';
@@ -87,3 +107,5 @@
     </script>
   </body>
 </html>
+
+
